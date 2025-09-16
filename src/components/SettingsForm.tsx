@@ -7,7 +7,11 @@ const SettingsForm: React.FC = () => {
     displayItems: [],
     itemOrder: [],
     discomfortOptions: [],
-    summaryItems: []
+    summaryItems: [],
+    chartRanges: {
+      weight: { min: 20, max: 150 },
+      temperature: { min: 20, max: 50 }
+    }
   });
   const [newDiscomfort, setNewDiscomfort] = useState('');
 
@@ -88,6 +92,19 @@ const SettingsForm: React.FC = () => {
       [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
       setSettings({ ...settings, itemOrder: newOrder });
     }
+  };
+
+  const updateChartRange = (chartType: 'weight' | 'temperature', field: 'min' | 'max', value: number) => {
+    setSettings({
+      ...settings,
+      chartRanges: {
+        ...settings.chartRanges,
+        [chartType]: {
+          ...settings.chartRanges[chartType],
+          [field]: value
+        }
+      }
+    });
   };
 
   return (
@@ -260,6 +277,84 @@ const SettingsForm: React.FC = () => {
                 {item.label}のグラフ
               </label>
             ))}
+        </div>
+      </div>
+
+      {/* グラフ範囲設定 */}
+      <div style={{ marginBottom: '30px' }}>
+        <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>グラフの表示範囲</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+          各グラフのY軸の最小値・最大値を設定できます
+        </p>
+
+        {/* 体重グラフの範囲 */}
+        <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <h4 style={{ marginBottom: '10px', fontSize: '14px' }}>体重グラフ (kg)</h4>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '14px', minWidth: '60px' }}>最小値:</label>
+              <input
+                type="number"
+                value={settings.chartRanges.weight.min}
+                onChange={(e) => updateChartRange('weight', 'min', Number(e.target.value))}
+                style={{
+                  width: '80px',
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px'
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '14px', minWidth: '60px' }}>最大値:</label>
+              <input
+                type="number"
+                value={settings.chartRanges.weight.max}
+                onChange={(e) => updateChartRange('weight', 'max', Number(e.target.value))}
+                style={{
+                  width: '80px',
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 体温グラフの範囲 */}
+        <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <h4 style={{ marginBottom: '10px', fontSize: '14px' }}>体温グラフ (°C)</h4>
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '14px', minWidth: '60px' }}>最小値:</label>
+              <input
+                type="number"
+                value={settings.chartRanges.temperature.min}
+                onChange={(e) => updateChartRange('temperature', 'min', Number(e.target.value))}
+                style={{
+                  width: '80px',
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px'
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '14px', minWidth: '60px' }}>最大値:</label>
+              <input
+                type="number"
+                value={settings.chartRanges.temperature.max}
+                onChange={(e) => updateChartRange('temperature', 'max', Number(e.target.value))}
+                style={{
+                  width: '80px',
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px'
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 

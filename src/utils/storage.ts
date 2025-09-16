@@ -4,7 +4,11 @@ const defaultSettings: AppSettings = {
   displayItems: ['mood', 'temperature', 'weight', 'bloodPressure', 'heartRate'],
   itemOrder: ['mood', 'temperature', 'weight', 'bloodPressure', 'heartRate'],
   discomfortOptions: ['頭痛', '腹痛', '吐き気', '下痢', '便秘', '倦怠感', 'めまい', 'その他'],
-  summaryItems: ['mood', 'temperature']
+  summaryItems: ['mood', 'temperature'],
+  chartRanges: {
+    weight: { min: 20, max: 150 },
+    temperature: { min: 20, max: 50 }
+  }
 };
 
 // Electronの環境かどうかを確認

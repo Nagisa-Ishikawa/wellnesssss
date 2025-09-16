@@ -41,11 +41,20 @@ export interface HealthRecord {
   };
 }
 
+export interface ChartRange {
+  min: number;
+  max: number;
+}
+
 export interface AppSettings {
   displayItems: string[];
   itemOrder: string[];
   discomfortOptions: string[];
   summaryItems: string[];
+  chartRanges: {
+    weight: ChartRange;
+    temperature: ChartRange;
+  };
 }
 
 export interface AppData {
