@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,32 +14,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="app">
-      <nav className="sidebar">
-        <h1 style={{ marginBottom: '30px', fontSize: '20px', fontWeight: 'bold' }}>
-          健康管理アプリ
-        </h1>
-        <Link 
-          to="/" 
-          className={`nav-item ${isActive('/') ? 'active' : ''}`}
-        >
-          ホーム
+      <header className="header">
+        <Link to="/settings" className="settings-icon" title="設定">
+          ⚙️
         </Link>
-        <Link 
-          to="/record" 
-          className={`nav-item ${isActive('/record') ? 'active' : ''}`}
-        >
-          体調記録
-        </Link>
-        <Link 
-          to="/settings" 
-          className={`nav-item ${isActive('/settings') ? 'active' : ''}`}
-        >
-          設定
-        </Link>
-      </nav>
-      <main className="main-content">
-        {children}
-      </main>
+      </header>
+      <main className="main-content">{children}</main>
     </div>
   );
 };

@@ -68,11 +68,13 @@ const Calendar: React.FC<CalendarProps> = ({ currentDate = new Date() }) => {
   const getMoodColor = (mood?: MoodLevel): string => {
     switch (mood) {
       case 'good':
+        return '#4CAF50'; // 濃い緑
       case 'somewhat-good':
-        return '#4CAF50'; // 緑
+        return '#8BC34A'; // 薄い緑
       case 'normal':
         return '#FFC107'; // 黄
       case 'somewhat-bad':
+        return '#FF9800'; // オレンジ
       case 'bad':
         return '#F44336'; // 赤
       default:
@@ -150,18 +152,26 @@ const Calendar: React.FC<CalendarProps> = ({ currentDate = new Date() }) => {
       </div>
       
       <div style={{ marginTop: '15px', fontSize: '12px', color: '#666' }}>
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <div style={{ width: '12px', height: '12px', backgroundColor: '#4CAF50', borderRadius: '2px' }}></div>
-            <span>良い気分</span>
+            <span>良い</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <div style={{ width: '12px', height: '12px', backgroundColor: '#8BC34A', borderRadius: '2px' }}></div>
+            <span>やや良い</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <div style={{ width: '12px', height: '12px', backgroundColor: '#FFC107', borderRadius: '2px' }}></div>
             <span>普通</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <div style={{ width: '12px', height: '12px', backgroundColor: '#FF9800', borderRadius: '2px' }}></div>
+            <span>やや悪い</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             <div style={{ width: '12px', height: '12px', backgroundColor: '#F44336', borderRadius: '2px' }}></div>
-            <span>悪い気分</span>
+            <span>悪い</span>
           </div>
         </div>
       </div>

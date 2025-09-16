@@ -4,15 +4,24 @@ import HealthChart from '../components/HealthChart';
 
 const HomePage: React.FC = () => {
   return (
-    <div>
-      <h1>ホーム</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
-        <Calendar />
-        <HealthChart dataType="mood" period={14} />
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
-        <HealthChart dataType="temperature" period={14} />
-        <HealthChart dataType="weight" period={14} />
+    <div className="home-page">
+      <div className="home-content">
+        <div className="home-row">
+          <div className="home-item">
+            <Calendar />
+          </div>
+          <div className="home-item">
+            <HealthChart dataType="mood" period={14} />
+          </div>
+        </div>
+        <div className="home-row">
+          <div className="home-item">
+            <HealthChart dataType="temperature" period={14} />
+          </div>
+          <div className="home-item">
+            <HealthChart dataType="weight" period={14} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -31,13 +31,14 @@ interface HealthChartProps {
   period?: number; // 表示する日数
 }
 
-const HealthChart: React.FC<HealthChartProps> = ({ 
-  chartType = 'line', 
-  dataType, 
-  period = 30 
+const HealthChart: React.FC<HealthChartProps> = ({
+  chartType = 'line',
+  dataType,
+  period = 14
 }) => {
   const [records, setRecords] = React.useState<Record<string, HealthRecord>>({});
-  
+  const [currentOffset, setCurrentOffset] = React.useState(0); // 現在の表示期間のオフセット
+
   React.useEffect(() => {
     const loadRecords = async () => {
       const data = await getAllRecords();
@@ -46,21 +47,21 @@ const HealthChart: React.FC<HealthChartProps> = ({
     loadRecords();
   }, []);
   
-  // 過去30日のデータを取得
+  // 指定期間のデータを取得
   const getData = () => {
     const today = new Date();
     const dates: string[] = [];
     const data: (number | null)[] = [];
-    
+
     for (let i = period - 1; i >= 0; i--) {
       const date = new Date(today);
-      date.setDate(today.getDate() - i);
+      date.setDate(today.getDate() - i - currentOffset);
       const dateString = date.toISOString().split('T')[0];
       dates.push(date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' }));
-      
+
       const record = records[dateString];
       let value: number | null = null;
-      
+
       if (record) {
         switch (dataType) {
           case 'mood':
@@ -77,11 +78,34 @@ const HealthChart: React.FC<HealthChartProps> = ({
             break;
         }
       }
-      
+
       data.push(value);
     }
-    
+
     return { dates, data };
+  };
+
+  // 前の期間に移動
+  const goToPreviousPeriod = () => {
+    setCurrentOffset(currentOffset + period);
+  };
+
+  // 次の期間に移動
+  const goToNextPeriod = () => {
+    if (currentOffset >= period) {
+      setCurrentOffset(currentOffset - period);
+    }
+  };
+
+  // 現在の期間を取得（表示用）
+  const getCurrentPeriodLabel = () => {
+    const today = new Date();
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() - currentOffset);
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - period + 1);
+
+    return `${startDate.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })} - ${endDate.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}`;
   };
 
   const getMoodValue = (mood?: MoodLevel): number | null => {
@@ -126,7 +150,7 @@ const HealthChart: React.FC<HealthChartProps> = ({
         borderColor: dataType === 'mood' ? 'rgb(255, 99, 132)' : 'rgb(53, 162, 235)',
         backgroundColor: dataType === 'mood' ? 'rgba(255, 99, 132, 0.5)' : 'rgba(53, 162, 235, 0.5)',
         tension: 0.1,
-        spanGaps: false, // nullがある場合は線を切る
+        spanGaps: true, // nullがあっても線をつなげる
       },
     ],
   };
@@ -169,26 +193,54 @@ const HealthChart: React.FC<HealthChartProps> = ({
     },
   };
 
-  // データがない場合の表示
-  const hasData = data.some(value => value !== null);
-  if (!hasData) {
-    return (
-      <div style={{ 
-        background: 'white', 
-        padding: '20px', 
-        borderRadius: '8px',
-        textAlign: 'center',
-        color: '#666'
-      }}>
-        <h3>{getChartTitle()}</h3>
-        <p style={{ marginTop: '20px' }}>データがありません</p>
-        <p style={{ fontSize: '14px' }}>記録を追加するとグラフが表示されます</p>
-      </div>
-    );
-  }
 
   return (
     <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '15px'
+      }}>
+        <button
+          onClick={goToPreviousPeriod}
+          style={{
+            background: '#f8f9fa',
+            border: '1px solid #dee2e6',
+            borderRadius: '4px',
+            padding: '8px 12px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          ← 前
+        </button>
+
+        <div style={{
+          fontSize: '14px',
+          color: '#666',
+          fontWeight: '500'
+        }}>
+          {getCurrentPeriodLabel()}
+        </div>
+
+        <button
+          onClick={goToNextPeriod}
+          disabled={currentOffset < period}
+          style={{
+            background: currentOffset < period ? '#e9ecef' : '#f8f9fa',
+            border: '1px solid #dee2e6',
+            borderRadius: '4px',
+            padding: '8px 12px',
+            cursor: currentOffset < period ? 'not-allowed' : 'pointer',
+            fontSize: '14px',
+            color: currentOffset < period ? '#6c757d' : 'inherit'
+          }}
+        >
+          次 →
+        </button>
+      </div>
+
       {chartType === 'line' ? (
         <Line data={chartData} options={options} />
       ) : (
